@@ -1,0 +1,30 @@
+<!doctype html>
+<title>Shouldn't clear adoptedStyleSheets when adopting to/from document</title>
+<link rel="author" title="Rakina Zata Amni" href="mailto:rakina@chromium.org">
+<link rel="help" href="https://wicg.github.io/construct-stylesheets/">
+<script src = '/resources/testharness.js'></script>
+<script src = '/resources/testharnessreport.js'></script>
+<body>
+<div id="host"></div>
+</body>
+<script>
+test(function() {
+  let sheet = new CSSStyleSheet();
+  sheet.replaceSync("div { color: red }");
+
+  let host = document.getElementById("host");
+  let root = host.attachShadow({ mode: "open" });
+  root.adoptedStyleSheets = [sheet];
+  assert_equals(root.adoptedStyleSheets.length, 1);
+  assert_equals(root.adoptedStyleSheets[0], sheet);
+
+  const template = document.createElement("template");
+  template.content.appendChild(host);
+  assert_equals(root.adoptedStyleSheets.length, 1);
+  assert_equals(root.adoptedStyleSheets[0], sheet);
+
+  document.body.appendChild(host);
+  assert_equals(root.adoptedStyleSheets.length, 1);
+  assert_equals(root.adoptedStyleSheets[0], sheet);
+});
+</script>
