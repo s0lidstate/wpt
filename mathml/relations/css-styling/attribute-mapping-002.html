@@ -18,6 +18,7 @@
 <script src="/resources/testharnessreport.js"></script>
 <script src="/mathml/support/mathml-fragments.js"></script>
 <script>
+  var epsilon = 1;
   setup({ explicit_done: true });
   window.addEventListener("load", runTests);
   function fontSize(style) {
@@ -44,19 +45,19 @@
 
           test(function() {
               // none and mprescripts appear as scripts
-              assert_equals(style.getPropertyValue("math-depth"), tag === "none" || tag === "mprescripts" ? 1 : 0, "no attribute");
+              assert_equals(style.getPropertyValue("math-depth"), tag === "none" || tag === "mprescripts" ? "1" : "0", "no attribute");
 
               var absoluteScriptlevel = 2;
               element.setAttribute("scriptlevel", absoluteScriptlevel);
-              assert_equals(style.getPropertyValue("math-depth"), absoluteScriptlevel, "attribute specified (<U>)");
+              assert_equals(style.getPropertyValue("math-depth"), "" + absoluteScriptlevel, "attribute specified <U>");
 
               var positiveScriptlevelDelta = 1;
               element.setAttribute("scriptlevel", `+${positiveScriptlevelDelta}`);
-              assert_equals(style.getPropertyValue("math-depth"), positiveScriptlevelDelta, epsilon, "attribute specified (+<U>)");
+              assert_equals(style.getPropertyValue("math-depth"), "" + positiveScriptlevelDelta, "attribute specified +<U>");
 
               var negativeScriptlevelDelta = -3;
-      element.setAttribute("scriptlevel", negativeScriptlevelDelta);
-              assert_approx_equals(style.getPropertyValue("math-depth"), negativeScriptlevelDelta, "attribute specified (-<U>)");
+              element.setAttribute("scriptlevel", `${negativeScriptlevelDelta}`);
+              assert_equals(style.getPropertyValue("math-depth"), "" + negativeScriptlevelDelta, "attribute specified -<U>");
 
               element.setAttribute("scriptlevel", absoluteScriptlevel);
               element.setAttribute("mathsize", "42px");
